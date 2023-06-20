@@ -32,29 +32,27 @@ public class Core : ModSystem
         ClientMain clientMain = capi.World as ClientMain;
         if (!AutoPanning) return;
 
-        EntityPlayer entityPlayer = capi?.World?.Player.Entity;
-        ItemSlot activeSlot = capi?.World?.Player?.InventoryManager?.ActiveHotbarSlot;
-        ItemStack heldItem = activeSlot?.Itemstack;
-        BlockPos playerPos = entityPlayer?.Pos?.AsBlockPos;
+        EntityPlayer entityPlayer = capi.World.Player.Entity;
+        ItemSlot activeSlot = capi.World.Player.InventoryManager.ActiveHotbarSlot;
+        BlockPos playerPos = entityPlayer.Pos.AsBlockPos;
 
-        if (heldItem?.Collectible is BlockPan blockPan)
+        if (activeSlot.Itemstack?.Collectible is not BlockPan blockPan) return;
+
+        if (TryPan(capi, activeSlot)) return;
+
+        for (int dx = -SearchRange; dx <= SearchRange; dx++)
         {
-            if (TryPan(capi, activeSlot)) return;
-
-            for (int dx = -SearchRange; dx <= SearchRange; dx++)
+            for (int dy = -SearchRange; dy <= SearchRange; dy++)
             {
-                for (int dy = -SearchRange; dy <= SearchRange; dy++)
+                for (int dz = -SearchRange; dz <= SearchRange; dz++)
                 {
-                    for (int dz = -SearchRange; dz <= SearchRange; dz++)
-                    {
-                        BlockPos blockPos = playerPos.AddCopy(dx, dy, dz);
-                        Block block = entityPlayer.World.BlockAccessor.GetBlock(blockPos);
+                    BlockPos blockPos = playerPos.AddCopy(dx, dy, dz);
+                    Block block = entityPlayer.World.BlockAccessor.GetBlock(blockPos);
 
-                        if (!blockPan.IsPannableMaterial(block)) continue;
+                    if (!blockPan.IsPannableMaterial(block)) continue;
 
-                        var blockSel = new BlockSelection(blockPos, BlockFacing.DOWN, block);
-                        clientMain.SendHandInteraction(2, blockSel, null, EnumHandInteract.HeldItemInteract, Vintagestory.Common.EnumHandInteractNw.StartHeldItemUse, true);
-                    }
+                    var blockSel = new BlockSelection(blockPos, BlockFacing.DOWN, block);
+                    clientMain.SendHandInteraction(2, blockSel, null, EnumHandInteract.HeldItemInteract, Vintagestory.Common.EnumHandInteractNw.StartHeldItemUse, true);
                 }
             }
         }
