@@ -62,8 +62,13 @@ public class Core : ModSystem
 
     private static bool TryPan(ICoreClientAPI capi, ItemSlot slot)
     {
-        return slot.Itemstack.Attributes.GetAsString("materialBlockCode") != null
-            && (capi.Input.InWorldMouseButton.Right = true);
+        if (slot.Itemstack.Attributes.GetAsString("materialBlockCode") != null)
+        {
+            capi.Input.InWorldMouseButton.Right = true;
+            return true;
+        }
+        capi.Input.InWorldMouseButton.Right = false;
+        return false;
     }
 
     private bool ToggleAutoPanning(KeyCombination t1)
