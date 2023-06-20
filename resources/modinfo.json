@@ -1,0 +1,9 @@
+{
+    "type": "code",
+    "side": "client",
+    "modid": "autopanning",
+    "name": "Auto Panning",
+    "description": "Set your character up to pan for you",
+    "authors": ["Craluminum2413"],
+    "version": "1.0.0"
+}
