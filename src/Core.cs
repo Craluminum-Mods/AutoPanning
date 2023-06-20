@@ -20,10 +20,7 @@ public class Core : ModSystem
     {
         base.StartClientSide(capi);
         capi.Input.RegisterHotKey("autopanning", Lang.Get("autopanning:ToggleAutoPanning"), GlKeys.X, HotkeyType.CharacterControls, ctrlPressed: true);
-        capi.Input.SetHotKeyHandler("autopanning", ToggleAutoPanning);
-
-        capi.Event.RegisterGameTickListener(x => OnGameTick(x, capi), 1000);
-
+        capi.Input.SetHotKeyHandler("autopanning", x => ToggleAutoPanning(x, capi));
         capi.World.Logger.Event("started 'Auto Panning' mod");
     }
 
@@ -69,9 +66,12 @@ public class Core : ModSystem
         return false;
     }
 
-    private bool ToggleAutoPanning(KeyCombination t1)
+    private bool ToggleAutoPanning(KeyCombination t1, ICoreClientAPI capi)
     {
         AutoPanning = !AutoPanning;
+
+        if (AutoPanning) { autoPanningTickTime = capi.Event.RegisterGameTickListener(x => OnGameTick(x, capi), 1000); }
+        else { capi.Event.UnregisterGameTickListener(autoPanningTickTime); }
         return true;
     }
 }
