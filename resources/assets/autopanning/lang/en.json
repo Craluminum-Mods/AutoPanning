@@ -1,3 +1,5 @@
 {
-    "ToggleAutoPanning": "Toggle Auto Panning"
+    "ToggleAutoPanning": "Toggle Auto Panning",
+    "AutoPanning-true": "Auto Panning <font weight=\"bold\" color=\"#84ff84\">Enabled</font>",
+    "AutoPanning-false": "Auto Panning <font weight=\"bold\" color=\"#ff8484\">Disabled</font>"
 }

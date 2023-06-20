@@ -11,6 +11,7 @@ namespace AutoPanning;
 
 public class Core : ModSystem
 {
+    private long autoPanningTickTime;
     public int SearchRange { get; set; } = 5;
     public bool AutoPanning { get; set; }
 
@@ -69,6 +70,7 @@ public class Core : ModSystem
     private bool ToggleAutoPanning(KeyCombination t1, ICoreClientAPI capi)
     {
         AutoPanning = !AutoPanning;
+        capi.TriggerChatMessage(Lang.Get("autopanning:AutoPanning-" + AutoPanning.ToString().ToLowerInvariant()));
 
         if (AutoPanning) { autoPanningTickTime = capi.Event.RegisterGameTickListener(x => OnGameTick(x, capi), 1000); }
         else { capi.Event.UnregisterGameTickListener(autoPanningTickTime); }
